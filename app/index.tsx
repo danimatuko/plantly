@@ -1,10 +1,13 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { Link } from "expo-router";
+import { View, Text, Button, StyleSheet } from "react-native";
 
-export default function App() {
+export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to Plantly! 🌱</Text>
+      <Link href="/plantlist" asChild>
+        <Button title="View My Plants" color="limegreen" />
+      </Link>
     </View>
   );
 }
@@ -14,12 +17,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f0f8ff",
+    backgroundColor: "#f5fffa",
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
-    color: "#333",
+    marginBottom: 20,
+    color: "#2e8b57",
   },
 });
 
