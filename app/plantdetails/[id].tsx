@@ -1,35 +1,44 @@
-import { View, Text, Button, StyleSheet } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import React from 'react';
+import { View, Text, StyleSheet, Button } from 'react-native';
+import { usePlants } from '../../context/PlantContext'; // Import the correct hook
+import { router, useLocalSearchParams } from 'expo-router'; // Import useLocalSearchParams hook
 
-export default function PlantDetails() {
-  const { id } = useLocalSearchParams();
-  const router = useRouter();
+// Define a type for Plant to avoid implicit any errors (if not already defined in context)
+interface Plant {
+  id: string;
+  name: string;
+  description: string;
+}
 
-  if (!id) {
+export default function PlantDetailsScreen() {
+  const { id } = useLocalSearchParams(); // Access the plant id using useLocalSearchParams
+  const { plants } = usePlants(); // Access the plant data from context
+
+  // Ensure that the 'id' is a string and check for the plant data
+  if (!id || typeof id !== 'string') {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>Plant ID is missing</Text>
+        <Text style={styles.errorText}>Invalid plant ID</Text>
       </View>
     );
   }
 
-  const plant = {
-    id: id,
-    name: 'Aloe Vera',
-    description: 'Aloe Vera is a succulent plant species of the genus Aloe.',
-  };
+  // Find the selected plant by id
+  const plant = plants.find((p: Plant) => p.id === id);
 
-  const handleBack = () => {
-    router.push('/plantlist');  // Use the `router.push` to navigate back
-  };
+  if (!plant) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Plant not found</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{plant.name}</Text>
-      <Text style={styles.description}>{plant.description}</Text>
-
-      {/* Use button to navigate back */}
-      <Button title="Back to Plant List" color="limegreen" onPress={handleBack} />
+      <Text style={styles.details}>{plant.description}</Text>
+      <Button title="Go Back" onPress={() => router.back()} color="#2e8b57" />
     </View>
   );
 }
@@ -47,16 +56,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#2e8b57',
   },
-  description: {
-    fontSize: 16,
+  details: {
+    fontSize: 18,
+    color: '#555',
     marginBottom: 20,
-    color: '#4b7c57',
-    paddingHorizontal: 20,
-    textAlign: 'center',
   },
   errorText: {
-    color: 'red',
     fontSize: 18,
+    color: 'red',
   },
 });
 

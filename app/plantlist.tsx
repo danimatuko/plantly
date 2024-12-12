@@ -1,26 +1,40 @@
-import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, Button, StyleSheet, FlatList } from "react-native";
+import { useRouter } from "expo-router"; // Import useRouter hook for navigation
+import { usePlants } from "../context/PlantContext"; // Import the context
 
-const plants = [
-    { id: '1', name: 'Aloe Vera' },
-    { id: '2', name: 'Cactus' },
-    { id: '3', name: 'Snake Plant' },
-];
+export default function PlantListScreen() {
+    const { plants } = usePlants(); // Access the plant data from context
+    const router = useRouter(); // Initialize the useRouter hook
 
-export default function PlantList() {
+    // Function to navigate to the Add Plant screen
+    const navigateToAddPlant = () => {
+        router.push("/addplant");
+    };
+
+    // Function to navigate to the Plant Details screen
+    const navigateToPlantDetails = (id: string) => {
+        router.push(`/plantdetails/${id}`);
+    };
+
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>My Plants</Text>
+            <Text style={styles.title}>My Plant List</Text>
+
+            {/* Button for navigating to Add Plant screen */}
+            <Button title="Add New Plant" color="limegreen" onPress={navigateToAddPlant} />
 
             <FlatList
-                data={plants}
+                data={plants} // Use the context data
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.plantItem}>
                         <Text style={styles.plantName}>{item.name}</Text>
-                        <Link href={`/plantdetails/${item.id}`} asChild>
-                            <Button title="View Details" color="green" />
-                        </Link>
+                        <Text style={styles.plantDescription}>{item.description}</Text>
+                        <Button
+                            title="View Details"
+                            color="limegreen"
+                            onPress={() => navigateToPlantDetails(item.id)} // Navigate to plant details using router
+                        />
                     </View>
                 )}
             />
@@ -31,33 +45,30 @@ export default function PlantList() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f5fffa',
+        padding: 20,
+        backgroundColor: "#f5fffa",
     },
     title: {
         fontSize: 28,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         marginBottom: 20,
-        color: '#2e8b57',
+        color: "#2e8b57",
     },
     plantItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
         marginBottom: 15,
-        backgroundColor: '#ffffff',
         padding: 10,
-        width: '90%',
+        backgroundColor: "#e0f7e0",
         borderRadius: 8,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
     },
     plantName: {
-        fontSize: 18,
-        color: '#2e8b57',
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#2e8b57",
+    },
+    plantDescription: {
+        fontSize: 14,
+        color: "#555",
+        marginBottom: 10,
     },
 });
 
