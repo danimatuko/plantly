@@ -21,7 +21,7 @@ const PlantListScreen = () => {
       <Button
         title="Add New Plant"
         color="limegreen"
-        onPress={() => router.push("/addplant")}
+        onPress={() => router.push("/AddPlantScreen")}
       />
       <FlatList
         data={plants}
@@ -47,7 +47,7 @@ const PlantListScreen = () => {
             <Button
               title="View Details"
               color="limegreen"
-              onPress={() => router.push(`/plantdetails/${plant.id}`)}
+              onPress={() => router.push(`/PlantDetailsScreen/${plant.id}`)}
             />
           </View>
         )}

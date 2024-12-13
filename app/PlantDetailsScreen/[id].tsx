@@ -7,6 +7,7 @@ export default function PlantDetailsScreen() {
   const { id } = useLocalSearchParams();
   const { plants, deletePlant, editPlant } = usePlants();
 
+  // Find the plant by ID
   const plant = plants.find((p) => p.id === id);
 
   if (!plant) {
@@ -44,7 +45,8 @@ export default function PlantDetailsScreen() {
       </Text>
       <Text style={styles.infoText}>
         Next Watering:{" "}
-        {getNextWateringDate(plant.lastWatered, plant.wateringFrequency)}
+        {getNextWateringDate(plant.lastWatered, plant.wateringFrequency || 7)}{" "}
+        {/* Default frequency to 7 days */}
       </Text>
 
       {/* Mark as Watered Button */}
@@ -60,7 +62,10 @@ export default function PlantDetailsScreen() {
           title="Edit Plant"
           color="orange"
           onPress={() =>
-            router.push({ pathname: "/edit-plant", params: { id: plant.id } })
+            router.push({
+              pathname: "/EditPlantScreen", // Correct route for Edit Plant screen
+              params: { id: plant.id },
+            })
           }
         />
         <Button
@@ -68,7 +73,7 @@ export default function PlantDetailsScreen() {
           color="red"
           onPress={() => {
             deletePlant(plant.id);
-            router.replace("/"); // Go back to the Plant List Screen
+            router.replace("/PlantListScreen"); // Go back to the Plant List Screen
           }}
         />
       </View>
