@@ -1,4 +1,5 @@
 import React, { createContext, useState, ReactNode, useContext } from "react";
+import plantsData from "./data/initialPlants";
 
 /**
  * Represents a plant with an ID, name, and description.
@@ -7,6 +8,8 @@ export interface Plant {
   id: string;
   name: string;
   description: string;
+  lastWatered: string; // Date in ISO string format
+  wateringFrequency: number; // Number of days
 }
 
 /**
@@ -27,19 +30,7 @@ const PlantContext = createContext<PlantContextType | undefined>(undefined);
 /**
  * Initial data for the plants.
  */
-const initialPlants: Plant[] = [
-  {
-    id: "1",
-    name: "Aloe Vera",
-    description: "A succulent plant with medicinal properties",
-  },
-  {
-    id: "2",
-    name: "Cactus",
-    description: "A plant with spines that thrive in dry conditions",
-  },
-  { id: "3", name: "Ficus", description: "A popular indoor plant" },
-];
+const initialPlants = plantsData;
 
 /**
  * Provider component for the PlantContext.

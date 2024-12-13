@@ -2,7 +2,14 @@ import React from "react";
 import { View, Text, Button, StyleSheet, FlatList } from "react-native";
 import { useRouter } from "expo-router";
 import { usePlants } from "../context/PlantContext";
-import { Plant } from "../context/PlantContext"; // Import the Plant type
+import { Plant } from "../context/PlantContext";
+
+// Helper function to calculate the next watering date
+const getNextWateringDate = (lastWatered: string, frequency: number) => {
+  const nextDate = new Date(lastWatered);
+  nextDate.setDate(nextDate.getDate() + frequency); // Add watering frequency
+  return nextDate.toDateString(); // Return as a readable string
+};
 
 const PlantListScreen = () => {
   const { plants } = usePlants();
@@ -21,12 +28,26 @@ const PlantListScreen = () => {
         keyExtractor={(plant) => plant.id}
         renderItem={({ item: plant }: { item: Plant }) => (
           <View style={styles.plantItem}>
+            {/* Plant Name */}
             <Text style={styles.plantName}>{plant.name}</Text>
+
+            {/* Plant Description */}
             <Text style={styles.plantDescription}>{plant.description}</Text>
+
+            {/* Watering Information */}
+            <Text style={styles.wateringInfo}>
+              Last Watered: {new Date(plant.lastWatered).toDateString()}
+            </Text>
+            <Text style={styles.wateringInfo}>
+              Next Watering:{" "}
+              {getNextWateringDate(plant.lastWatered, plant.wateringFrequency)}
+            </Text>
+
+            {/* View Details Button */}
             <Button
               title="View Details"
               color="limegreen"
-              onPress={() => router.push(`/plantdetails/${plant.id}`)} // Navigate directly
+              onPress={() => router.push(`/plantdetails/${plant.id}`)}
             />
           </View>
         )}
@@ -61,7 +82,12 @@ const styles = StyleSheet.create({
   plantDescription: {
     fontSize: 14,
     color: "#555",
-    marginBottom: 10,
+    marginBottom: 5,
+  },
+  wateringInfo: {
+    fontSize: 14,
+    color: "#6b8e23", // Olive green for watering info
+    marginBottom: 5,
   },
 });
 
