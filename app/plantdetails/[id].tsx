@@ -1,30 +1,13 @@
-import React from 'react';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { usePlants } from '../../context/PlantContext';
 import { View, Text, StyleSheet, Button } from 'react-native';
-import { usePlants } from '../../context/PlantContext'; // Import the correct hook
-import { router, useLocalSearchParams } from 'expo-router'; // Import useLocalSearchParams hook
-
-// Define a type for Plant to avoid implicit any errors (if not already defined in context)
-interface Plant {
-  id: string;
-  name: string;
-  description: string;
-}
 
 export default function PlantDetailsScreen() {
-  const { id } = useLocalSearchParams(); // Access the plant id using useLocalSearchParams
-  const { plants } = usePlants(); // Access the plant data from context
+  const router = useRouter();
+  const { id } = useLocalSearchParams();
+  const { plants, deletePlant, editPlant } = usePlants();
 
-  // Ensure that the 'id' is a string and check for the plant data
-  if (!id || typeof id !== 'string') {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Invalid plant ID</Text>
-      </View>
-    );
-  }
-
-  // Find the selected plant by id
-  const plant = plants.find((p: Plant) => p.id === id);
+  const plant = plants.find((p) => p.id === id);
 
   if (!plant) {
     return (
@@ -38,6 +21,25 @@ export default function PlantDetailsScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>{plant.name}</Text>
       <Text style={styles.details}>{plant.description}</Text>
+
+      {/* Delete Button */}
+      <Button
+        title="Delete Plant"
+        color="red"
+        onPress={() => {
+          deletePlant(plant.id); // Call delete function
+          router.replace('/');   // Navigate back to the Plant List Screen
+        }}
+      />
+
+
+      <Button
+        title="Edit Plant"
+        onPress={() => router.push({ pathname: '/edit-plant', params: { id: plant.id } })}
+      />
+
+
+      {/* Back Button */}
       <Button title="Go Back" onPress={() => router.back()} color="#2e8b57" />
     </View>
   );
