@@ -6,13 +6,12 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#85A98F", // Primary color for active tab
-        //tabBarInactiveTintColor: "#8C9B7A", // Secondary color for inactive tabs
+        headerStyle: { backgroundColor: "#f5fffa" },
         tabBarStyle: {
           backgroundColor: "#f5fffa",
         },
       }}
     >
-      {/* Home Screen */}
       <Tabs.Screen
         name="index"
         options={{
@@ -23,7 +22,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Plant List Screen */}
       <Tabs.Screen
         name="PlantListScreen"
         options={{
@@ -34,7 +32,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Add Plant Screen */}
       <Tabs.Screen
         name="AddPlantScreen"
         options={{

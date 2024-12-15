@@ -7,7 +7,6 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header Section */}
       <Image
         source={require("@/assets/images/icon.png")}
         style={styles.logo}
@@ -18,7 +17,6 @@ export default function HomeScreen() {
         Your personal assistant to keep your plants happy and healthy.
       </Text>
 
-      {/* Navigation Buttons */}
       <PlantlyButton
         title="View My Plants"
         onPress={() => router.push("/PlantListScreen")}
@@ -29,8 +27,7 @@ export default function HomeScreen() {
         onPress={() => router.push("/AddPlantScreen")}
       />
 
-      {/* Optional Footer Section for a more complete look */}
-      <TouchableOpacity onPress={() => router.push("/settings")}>
+      <TouchableOpacity onPress={() => router.push("/")}>
         <Text style={styles.footerText}>Go to Settings</Text>
       </TouchableOpacity>
     </View>

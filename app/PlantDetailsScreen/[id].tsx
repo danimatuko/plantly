@@ -83,7 +83,10 @@ export default function PlantDetailsScreen() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.push("/PlantListScreen")}
+      >
         <FontAwesome name="arrow-left" size={24} color="#fff" />
         <Text style={styles.backButtonText}>Go Back</Text>
       </TouchableOpacity>

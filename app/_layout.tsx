@@ -21,12 +21,16 @@ export default function RootLayout() {
     <PlantProvider>
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: "#2e8b57" },
-          headerTintColor: "#fff",
+          headerStyle: { backgroundColor: "#f5fffa" },
           headerTitleStyle: { fontWeight: "bold" },
+          headerShown: false,
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="PlantDetailsScreen/[id]" // Using a dynamic route for the plant ID
+          options={{ title: "Plant Details" }} // Customize the header if needed
+        />
       </Stack>
     </PlantProvider>
   );

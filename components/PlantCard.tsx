@@ -6,6 +6,8 @@ import { useRouter } from "expo-router";
 interface PlantCardProps {
   name: string;
   description: string;
+  lastWatered: string;
+  nextWatering: string;
   onViewDetails: () => void;
 }
 

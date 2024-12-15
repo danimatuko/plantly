@@ -1,12 +1,6 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-} from "react-native";
 import { useRouter } from "expo-router";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import { usePlants } from "../../context/PlantContext";
 import { Plant } from "../../context/PlantContext";
 import PlantCard from "@/components/PlantCard";
@@ -28,8 +22,6 @@ const PlantListScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>🌱 My Plants</Text>
 
-      {/* Add Plant Button */}
-
       <PlantlyButton
         title="Add New Plant"
         onPress={() => router.push("/AddPlantScreen")}
@@ -37,7 +29,6 @@ const PlantListScreen = () => {
         <FontAwesome name="plus" size={24} color="#fff" />
       </PlantlyButton>
 
-      {/* Plant List */}
       <FlatList
         data={plants}
         keyExtractor={(plant) => plant.id}
@@ -69,7 +60,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: "center",
-
     backgroundColor: "#f5fffa",
   },
   title: {

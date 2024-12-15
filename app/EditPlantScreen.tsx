@@ -112,7 +112,7 @@ export default function EditPlantScreen() {
 
         <TouchableOpacity
           style={styles.cancelButton}
-          onPress={() => router.back()}
+          onPress={() => router.push("/PlantListScreen")}
         >
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
