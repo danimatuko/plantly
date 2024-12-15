@@ -1,5 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
+import React from "react";
 
 export default function TabLayout() {
   return (
@@ -38,6 +39,16 @@ export default function TabLayout() {
           title: "Add Plant",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="plus-circle" color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="SettingsScreen"
+        options={{
+          title: "settings",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="gear" color={color} />
           ),
         }}
       />
