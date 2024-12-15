@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import {
   View,
-  TextInput,
-  Button,
-  StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
+  StyleSheet,
   Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -14,24 +13,22 @@ import { useRouter } from "expo-router";
 
 export default function AddPlantScreen() {
   const { addPlant } = usePlants();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [wateringFrequency, setWateringFrequency] = useState<number | null>(
-    null,
-  );
-  const [lastWatered, setLastWatered] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
 
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [wateringFrequency, setWateringFrequency] = useState("");
+  const [lastWatered, setLastWatered] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
   const handleAddPlant = () => {
-    if (!name.trim() || !description.trim() || wateringFrequency === null) {
-      setError("Please fill in all fields");
+    if (!name.trim() || !description.trim() || !wateringFrequency.trim()) {
+      Alert.alert("Error", "All fields are required");
       return;
     }
 
-    if (wateringFrequency <= 0) {
-      setError("Watering frequency must be a positive number");
+    if (isNaN(Number(wateringFrequency)) || Number(wateringFrequency) <= 0) {
+      Alert.alert("Error", "Watering frequency must be a positive number");
       return;
     }
 
@@ -39,47 +36,53 @@ export default function AddPlantScreen() {
       id: Date.now().toString(),
       name,
       description,
-      wateringFrequency,
+      wateringFrequency: Number(wateringFrequency),
       lastWatered: lastWatered.toISOString(),
     };
 
     addPlant(newPlant);
-    Alert.alert("Success", "Plant added successfully!");
-    router.back();
+    Alert.alert("Success", "Plant added successfully!", [
+      { text: "OK", onPress: () => router.back() },
+    ]);
   };
 
   return (
     <View style={styles.container}>
-      {/* Name Input */}
+      <Text style={styles.title}>Add New Plant</Text>
+
+      {/* Plant Name */}
       <TextInput
         style={styles.input}
         placeholder="Plant Name"
         value={name}
         onChangeText={setName}
+        placeholderTextColor="#9BA5A0"
       />
 
-      {/* Description Input */}
+      {/* Description */}
       <TextInput
         style={styles.input}
-        placeholder="Plant Description"
+        placeholder="Description"
         value={description}
         onChangeText={setDescription}
         multiline
+        placeholderTextColor="#9BA5A0"
       />
 
-      {/* Watering Frequency Input */}
+      {/* Watering Frequency */}
       <TextInput
         style={styles.input}
         placeholder="Watering Frequency (days)"
-        value={wateringFrequency?.toString() || ""}
-        onChangeText={(text) => setWateringFrequency(Number(text) || null)}
+        value={wateringFrequency}
+        onChangeText={setWateringFrequency}
         keyboardType="numeric"
+        placeholderTextColor="#9BA5A0"
       />
 
-      {/* Last Watered Field Styled as Input */}
+      {/* Last Watered */}
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
         <View style={styles.input}>
-          <Text style={{ color: lastWatered ? "#000" : "#aaa" }}>
+          <Text style={{ color: "#555" }}>
             {lastWatered
               ? lastWatered.toDateString()
               : "Select Last Watered Date"}
@@ -87,7 +90,6 @@ export default function AddPlantScreen() {
         </View>
       </TouchableOpacity>
 
-      {/* Date Picker */}
       {showDatePicker && (
         <DateTimePicker
           value={lastWatered}
@@ -100,11 +102,19 @@ export default function AddPlantScreen() {
         />
       )}
 
-      {/* Error Message */}
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {/* Buttons */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.addButton} onPress={handleAddPlant}>
+          <Text style={styles.buttonText}>Add Plant</Text>
+        </TouchableOpacity>
 
-      {/* Add Button */}
-      <Button title="Add Plant" onPress={handleAddPlant} color="#2e8b57" />
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -112,24 +122,53 @@ export default function AddPlantScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     backgroundColor: "#f5fffa",
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 50,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "600",
+    color: "#85A98F",
+    textAlign: "center",
+    marginBottom: 30,
   },
   input: {
-    width: "100%",
-    height: 40,
-    borderColor: "#2e8b57",
-    borderWidth: 1,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-    borderRadius: 4,
     backgroundColor: "#fff",
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#8C9B7A",
+    marginBottom: 20,
+    fontSize: 16,
+    color: "#555",
   },
-  errorText: {
-    color: "red",
-    marginBottom: 10,
-    textAlign: "center",
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  addButton: {
+    backgroundColor: "#85A98F",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    flex: 1,
+    marginRight: 10,
+    alignItems: "center",
+  },
+  cancelButton: {
+    backgroundColor: "#7D8B8C",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    flex: 1,
+    marginLeft: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });

@@ -5,52 +5,64 @@ import {
   StyleSheet,
   ViewStyle,
   TextStyle,
+  View,
 } from "react-native";
 
-interface PlantlyButtonProps {
+type PlantlyButtonProps = {
   title: string;
   onPress: () => void;
   color?: string;
   style?: ViewStyle;
   textStyle?: TextStyle;
-}
+  children?: React.ReactNode; // Accepts any children, like icons
+};
 
-const PlantlyButton: React.FC<PlantlyButtonProps> = ({
+export default function PlantlyButton({
   title,
   onPress,
-  color = "#85A98F", // Default color
+  color = "#85A98F",
   style,
   textStyle,
-}) => {
+  children, // Accept children prop
+}: PlantlyButtonProps) {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: color }, style]}
       onPress={onPress}
+      activeOpacity={0.8}
+      style={[styles.button, { backgroundColor: color }, style]}
     >
-      <Text style={[styles.buttonText, textStyle]}>{title}</Text>
+      <View style={styles.buttonContent}>
+        {children} {/* Render any children here, like icons */}
+        <Text style={[styles.text, textStyle]}>{title}</Text>
+      </View>
     </TouchableOpacity>
   );
-};
+}
 
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     borderRadius: 8,
-    marginBottom: 15,
-    width: "80%",
+    marginBottom: 30,
     alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 3,
+    shadowRadius: 4,
+    elevation: 4,
+    width: 200,
   },
-  buttonText: {
-    fontSize: 18,
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    fontSize: 15,
     color: "#fff",
-    fontWeight: "600",
+    fontWeight: "bold",
+    marginLeft: 10, // Space between the icon and text
   },
 });
-
-export default PlantlyButton;

@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { usePlants } from "../context/PlantContext"; // Correct import path
+import { usePlants } from "../context/PlantContext";
 
 export default function EditPlantScreen() {
   const router = useRouter();
@@ -16,7 +23,12 @@ export default function EditPlantScreen() {
     return (
       <View style={styles.container}>
         <Text style={styles.errorText}>Plant not found</Text>
-        <Button title="Go Back" onPress={() => router.back()} color="#2e8b57" />
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.backButtonText}>Go Back</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -29,9 +41,8 @@ export default function EditPlantScreen() {
   );
   const [lastWatered, setLastWatered] = useState(
     new Date(plant.lastWatered).toISOString().split("T")[0],
-  ); // Format date as YYYY-MM-DD
+  );
 
-  // Handler for saving changes
   const handleSave = () => {
     if (!name.trim() || !description.trim() || !wateringFrequency.trim()) {
       Alert.alert("Error", "All fields are required");
@@ -43,7 +54,6 @@ export default function EditPlantScreen() {
       return;
     }
 
-    // Call editPlant from context with updated values
     editPlant({
       id: plant.id,
       name,
@@ -61,47 +71,52 @@ export default function EditPlantScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Edit Plant</Text>
 
-      {/* Input for Name */}
       <TextInput
         style={styles.input}
         placeholder="Name"
         value={name}
         onChangeText={setName}
+        placeholderTextColor="#9BA5A0"
       />
 
-      {/* Input for Description */}
       <TextInput
         style={styles.input}
         placeholder="Description"
         value={description}
         onChangeText={setDescription}
         multiline
+        placeholderTextColor="#9BA5A0"
       />
 
-      {/* Input for Watering Frequency */}
-      <Text style={styles.label}>Watering Frequency (days):</Text>
       <TextInput
         style={styles.input}
-        placeholder="e.g., 7"
+        placeholder="Watering Frequency (days)"
         value={wateringFrequency}
         onChangeText={setWateringFrequency}
         keyboardType="numeric"
+        placeholderTextColor="#9BA5A0"
       />
 
-      {/* Input for Last Watered Date */}
-      <Text style={styles.label}>Last Watered Date:</Text>
       <TextInput
         style={styles.input}
-        placeholder="YYYY-MM-DD"
+        placeholder="Last Watered (YYYY-MM-DD)"
         value={lastWatered}
         onChangeText={setLastWatered}
+        placeholderTextColor="#9BA5A0"
       />
 
-      {/* Save Button */}
-      <Button title="Save Changes" onPress={handleSave} color="#2e8b57" />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.buttonText}>Save Changes</Text>
+        </TouchableOpacity>
 
-      {/* Cancel Button */}
-      <Button title="Cancel" onPress={() => router.back()} color="grey" />
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => router.back()}
+        >
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -109,36 +124,68 @@ export default function EditPlantScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 20,
     backgroundColor: "#f5fffa",
+    paddingHorizontal: 20,
+    paddingTop: 50,
   },
   title: {
     fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#2e8b57",
+    fontWeight: "600",
+    color: "#85A98F",
     textAlign: "center",
+    marginBottom: 30,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-    marginBottom: 20,
     backgroundColor: "#fff",
-  },
-  label: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#8C9B7A",
+    marginBottom: 20,
     fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
     color: "#555",
   },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  saveButton: {
+    backgroundColor: "#85A98F",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    flex: 1,
+    marginRight: 10,
+    alignItems: "center",
+  },
+  cancelButton: {
+    backgroundColor: "#7D8B8C",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    flex: 1,
+    marginLeft: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "500",
+  },
   errorText: {
-    fontSize: 18,
     color: "red",
+    fontSize: 16,
     textAlign: "center",
     marginBottom: 20,
+  },
+  backButton: {
+    marginTop: 20,
+    alignSelf: "center",
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: "#85A98F",
+    fontWeight: "500",
   },
 });

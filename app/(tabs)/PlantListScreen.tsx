@@ -11,6 +11,7 @@ import { usePlants } from "../../context/PlantContext";
 import { Plant } from "../../context/PlantContext";
 import PlantCard from "@/components/PlantCard";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import PlantlyButton from "@/components/PlantlyButton";
 
 // Helper function to calculate the next watering date
 const getNextWateringDate = (lastWatered: string, frequency: number) => {
@@ -28,13 +29,13 @@ const PlantListScreen = () => {
       <Text style={styles.title}>🌱 My Plants</Text>
 
       {/* Add Plant Button */}
-      <TouchableOpacity
-        style={styles.addButton}
+
+      <PlantlyButton
+        title="Add New Plant"
         onPress={() => router.push("/AddPlantScreen")}
       >
         <FontAwesome name="plus" size={24} color="#fff" />
-        <Text style={styles.addButtonText}>Add a New Plant</Text>
-      </TouchableOpacity>
+      </PlantlyButton>
 
       {/* Plant List */}
       <FlatList
@@ -67,6 +68,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    alignItems: "center",
+
     backgroundColor: "#f5fffa",
   },
   title: {
@@ -90,12 +93,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
-  },
-  addButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-    marginLeft: 8,
   },
   emptyText: {
     fontSize: 16,
