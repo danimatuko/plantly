@@ -1,14 +1,22 @@
 import React from "react";
-import { View, Text, Button, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { usePlants } from "../../context/PlantContext";
 import { Plant } from "../../context/PlantContext";
+import PlantCard from "@/components/PlantCard";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 // Helper function to calculate the next watering date
 const getNextWateringDate = (lastWatered: string, frequency: number) => {
   const nextDate = new Date(lastWatered);
-  nextDate.setDate(nextDate.getDate() + frequency); // Add watering frequency
-  return nextDate.toDateString(); // Return as a readable string
+  nextDate.setDate(nextDate.getDate() + frequency);
+  return nextDate.toDateString();
 };
 
 const PlantListScreen = () => {
@@ -17,45 +25,44 @@ const PlantListScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>My Plant List</Text>
-      <Button
-        title="Add New Plant"
-        color="limegreen"
+      <Text style={styles.title}>🌱 Your Plant Collection</Text>
+
+      {/* Add Plant Button */}
+      <TouchableOpacity
+        style={styles.addButton}
         onPress={() => router.push("/AddPlantScreen")}
-      />
+      >
+        <FontAwesome name="plus" size={24} color="#fff" />
+        <Text style={styles.addButtonText}>Add a New Plant</Text>
+      </TouchableOpacity>
+
+      {/* Plant List */}
       <FlatList
         data={plants}
         keyExtractor={(plant) => plant.id}
         renderItem={({ item: plant }: { item: Plant }) => (
-          <View style={styles.plantItem}>
-            {/* Plant Name */}
-            <Text style={styles.plantName}>{plant.name}</Text>
-
-            {/* Plant Description */}
-            <Text style={styles.plantDescription}>{plant.description}</Text>
-
-            {/* Watering Information */}
-            <Text style={styles.wateringInfo}>
-              Last Watered: {new Date(plant.lastWatered).toDateString()}
-            </Text>
-            <Text style={styles.wateringInfo}>
-              Next Watering:{" "}
-              {getNextWateringDate(plant.lastWatered, plant.wateringFrequency)}
-            </Text>
-
-            {/* View Details Button */}
-            <Button
-              title="View Details"
-              color="limegreen"
-              onPress={() => router.push(`/PlantDetailsScreen/${plant.id}`)}
-            />
-          </View>
+          <PlantCard
+            name={plant.name}
+            description={plant.description}
+            lastWatered={new Date(plant.lastWatered).toDateString()}
+            nextWatering={getNextWateringDate(
+              plant.lastWatered,
+              plant.wateringFrequency,
+            )}
+            onViewDetails={() => router.push(`/PlantDetailsScreen/${plant.id}`)}
+          />
         )}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>
+            No plants yet. Start by adding a new plant!
+          </Text>
+        }
       />
     </View>
   );
 };
 
+// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -63,31 +70,38 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5fffa",
   },
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#2e8b57",
-  },
-  plantItem: {
+    fontSize: 30,
+    fontWeight: "700",
+    color: "#85A98F", // Accent color for title
     marginBottom: 15,
-    padding: 10,
-    backgroundColor: "#e0f7e0",
+    textAlign: "center",
+    lineHeight: 40, // Extra line height for better spacing
+  },
+  addButton: {
+    backgroundColor: "#85A98F", // Using the same accent color
+    paddingVertical: 14,
     borderRadius: 8,
+    marginBottom: 30,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
-  plantName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#2e8b57",
+  addButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+    marginLeft: 8,
   },
-  plantDescription: {
-    fontSize: 14,
-    color: "#555",
-    marginBottom: 5,
-  },
-  wateringInfo: {
-    fontSize: 14,
-    color: "#6b8e23", // Olive green for watering info
-    marginBottom: 5,
+  emptyText: {
+    fontSize: 16,
+    color: "#aaa",
+    textAlign: "center",
+    marginTop: 20,
   },
 });
 
