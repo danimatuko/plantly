@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { usePlants } from "../context/PlantContext";
+import { usePlants } from "../../context/PlantContext";
 import { useRouter } from "expo-router";
 
 export default function AddPlantScreen() {

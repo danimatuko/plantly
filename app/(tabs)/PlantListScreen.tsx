@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, Button, StyleSheet, FlatList } from "react-native";
 import { useRouter } from "expo-router";
-import { usePlants } from "../context/PlantContext";
-import { Plant } from "../context/PlantContext";
+import { usePlants } from "../../context/PlantContext";
+import { Plant } from "../../context/PlantContext";
 
 // Helper function to calculate the next watering date
 const getNextWateringDate = (lastWatered: string, frequency: number) => {
