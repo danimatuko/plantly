@@ -24,10 +24,9 @@ const PlantListScreen = () => {
 
       <PlantlyButton
         title="Add New Plant"
+        icon=<FontAwesome name="plus" size={24} color="#fff" />
         onPress={() => router.push("/AddPlantScreen")}
-      >
-        <FontAwesome name="plus" size={24} color="#fff" />
-      </PlantlyButton>
+      ></PlantlyButton>
 
       <FlatList
         data={plants}

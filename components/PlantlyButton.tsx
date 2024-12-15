@@ -14,7 +14,7 @@ type PlantlyButtonProps = {
   color?: string;
   style?: ViewStyle;
   textStyle?: TextStyle;
-  children?: React.ReactNode; // Accepts any children, like icons
+  icon?: React.ReactNode;
 };
 
 export default function PlantlyButton({
@@ -23,7 +23,7 @@ export default function PlantlyButton({
   color = "#85A98F",
   style,
   textStyle,
-  children, // Accept children prop
+  icon, // Accept icon prop
 }: PlantlyButtonProps) {
   return (
     <TouchableOpacity
@@ -32,7 +32,8 @@ export default function PlantlyButton({
       style={[styles.button, { backgroundColor: color }, style]}
     >
       <View style={styles.buttonContent}>
-        {children} {/* Render any children here, like icons */}
+        {/* Render the icon before the title */}
+        {icon}
         <Text style={[styles.text, textStyle]}>{title}</Text>
       </View>
     </TouchableOpacity>

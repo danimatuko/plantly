@@ -29,7 +29,6 @@ export default function AddPlantScreen() {
 
     if (isNaN(Number(wateringFrequency)) || Number(wateringFrequency) <= 0) {
       Alert.alert("Error", "Watering frequency must be a positive number");
-      return;
     }
 
     const newPlant = {
@@ -41,9 +40,15 @@ export default function AddPlantScreen() {
     };
 
     addPlant(newPlant);
+
     Alert.alert("Success", "Plant added successfully!", [
-      { text: "OK", onPress: () => router.back() },
+      {
+        text: "OK",
+        onPress: () => router.push(`/PlantDetailsScreen/${newPlant.id}`),
+      },
     ]);
+
+    router.push(`/PlantDetailsScreen/${newPlant.id}`);
   };
 
   return (
@@ -71,6 +76,7 @@ export default function AddPlantScreen() {
 
       {/* Watering Frequency */}
       <TextInput
+        inputMode="numeric"
         style={styles.input}
         placeholder="Watering Frequency (days)"
         value={wateringFrequency}
