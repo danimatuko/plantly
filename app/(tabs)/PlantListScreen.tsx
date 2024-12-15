@@ -25,7 +25,7 @@ const PlantListScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🌱 Your Plant Collection</Text>
+      <Text style={styles.title}>🌱 My Plants</Text>
 
       {/* Add Plant Button */}
       <TouchableOpacity

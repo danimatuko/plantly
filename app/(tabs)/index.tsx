@@ -1,6 +1,6 @@
 import PlantlyButton from "@/components/PlantlyButton";
 import { useRouter } from "expo-router";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 export default function HomeScreen() {
   const router = useRouter(); // Use router for navigation
@@ -25,9 +25,14 @@ export default function HomeScreen() {
       />
       <PlantlyButton
         title="Add a New Plant"
-        color="#6b8e23"
+        color="#8C9B7A"
         onPress={() => router.push("/AddPlantScreen")}
       />
+
+      {/* Optional Footer Section for a more complete look */}
+      <TouchableOpacity onPress={() => router.push("/settings")}>
+        <Text style={styles.footerText}>Go to Settings</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -37,26 +42,32 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f5fffa",
+    backgroundColor: "#F5FFFA", // Soft background color
     padding: 20,
   },
   logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
+    width: 120,
+    height: 120,
+    marginBottom: 30,
   },
   title: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: "bold",
-    color: "#2e8b57",
+    color: "#85A98F", // Natural green
     textAlign: "center",
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 16,
-    color: "#6b8e23",
+    fontSize: 18,
+    color: "#6B8E23", // Olive green
     textAlign: "center",
-    marginBottom: 30,
-    paddingInline: 25,
+    marginBottom: 40,
+    paddingHorizontal: 30, // Ensure text does not overflow on smaller screens
+  },
+  footerText: {
+    fontSize: 14,
+    color: "#2E8B57", // Deep green
+    marginTop: 20,
+    textDecorationLine: "underline", // Underline text for interaction
   },
 });

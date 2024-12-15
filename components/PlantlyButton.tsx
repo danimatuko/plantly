@@ -18,7 +18,7 @@ interface PlantlyButtonProps {
 const PlantlyButton: React.FC<PlantlyButtonProps> = ({
   title,
   onPress,
-  color = "#2e8b57", // Default color
+  color = "#85A98F", // Default color
   style,
   textStyle,
 }) => {
