@@ -1,5 +1,6 @@
 import React, { createContext, useState, ReactNode, useContext } from "react";
 import plantsData from "./data/initialPlants";
+import * as Notifications from "expo-notifications";
 
 /**
  * Represents a plant with an ID, name, and description.
@@ -10,6 +11,7 @@ export interface Plant {
   description: string;
   lastWatered: string; // Date in ISO string format
   wateringFrequency: number; // Number of days
+  notificationId?: string; // Optional field to store the notification ID
 }
 
 /**
@@ -18,8 +20,10 @@ export interface Plant {
 interface PlantContextType {
   plants: Plant[];
   addPlant: (plant: Plant) => void;
-  deletePlant: (string: Plant["id"]) => void;
-  editPlant: (string: Plant) => void;
+  deletePlant: (id: Plant["id"]) => void;
+  editPlant: (updatedPlant: Plant) => void;
+  scheduleWateringNotification: (plant: Plant) => Promise<void>;
+  cancelWateringNotification: (notificationId: string) => Promise<void>;
 }
 
 /**
@@ -48,6 +52,7 @@ export const PlantProvider = ({
 
   const addPlant = (plant: Plant) => {
     setPlants((prevPlants) => [...prevPlants, plant]);
+    scheduleWateringNotification(plant); // Ensure notifications are scheduled when a plant is added
   };
 
   const editPlant = (updatedPlant: Plant) => {
@@ -56,14 +61,65 @@ export const PlantProvider = ({
         plant.id === updatedPlant.id ? updatedPlant : plant,
       ),
     );
+    scheduleWateringNotification(updatedPlant); // Ensure notifications are updated on edit
   };
 
-  const deletePlant = (id: string) => {
+  const deletePlant = async (id: string) => {
+    // Find the plant to get the notificationId
+    const plantToDelete = plants.find((plant) => plant.id === id);
+
+    if (plantToDelete && plantToDelete.notificationId) {
+      // Cancel the notification for the plant
+      await cancelWateringNotification(plantToDelete.notificationId);
+    }
+
+    // Delete the plant from the list
     setPlants((prevPlants) => prevPlants.filter((plant) => plant.id !== id));
   };
 
+  const scheduleWateringNotification = async (plant: Plant) => {
+    const nextWateringDate = new Date(plant.lastWatered);
+    nextWateringDate.setDate(
+      nextWateringDate.getDate() + plant.wateringFrequency,
+    );
+
+    // Schedule a local notification
+    const notificationId = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: `Time to Water ${plant.name}!`,
+        body: `Don't forget to water your ${plant.name} today.`,
+      },
+      trigger: {
+        year: nextWateringDate.getFullYear(),
+        month: nextWateringDate.getMonth(),
+        day: nextWateringDate.getDate(),
+        hour: 9, // Set a specific hour for the notification (e.g., 9 AM)
+        minute: 0,
+      },
+    });
+
+    // Save the notification ID in the plant object
+    const updatedPlant = { ...plant, notificationId };
+    setPlants((prevPlants) =>
+      prevPlants.map((p) => (p.id === plant.id ? updatedPlant : p)),
+    );
+  };
+
+  const cancelWateringNotification = async (notificationId: string) => {
+    await Notifications.cancelScheduledNotificationAsync(notificationId);
+  };
+
   return (
-    <PlantContext.Provider value={{ plants, addPlant, deletePlant, editPlant }}>
+    <PlantContext.Provider
+      value={{
+        plants,
+        addPlant,
+        deletePlant,
+        editPlant,
+        scheduleWateringNotification,
+        cancelWateringNotification,
+      }}
+    >
       {children}
     </PlantContext.Provider>
   );
