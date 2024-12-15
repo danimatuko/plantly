@@ -15,8 +15,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "danimatuko.plantly"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -37,14 +36,6 @@
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "202a2a99-dffb-47b8-9588-11f4a6b7a5c1"
-      }
     }
   }
 }
