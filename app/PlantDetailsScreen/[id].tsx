@@ -1,13 +1,13 @@
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { usePlants } from "../../context/PlantContext";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function PlantDetailsScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { plants, deletePlant, editPlant } = usePlants();
 
-  // Find the plant by ID
   const plant = plants.find((p) => p.id === id);
 
   if (!plant) {
@@ -18,68 +18,75 @@ export default function PlantDetailsScreen() {
     );
   }
 
-  // Helper function to calculate the next watering date
   const getNextWateringDate = (lastWatered: string, frequency: number) => {
     const nextDate = new Date(lastWatered);
     nextDate.setDate(nextDate.getDate() + frequency);
     return nextDate.toDateString();
   };
 
-  // Handle marking the plant as watered
   const handleWaterPlant = () => {
     const updatedPlant = { ...plant, lastWatered: new Date().toISOString() };
-    editPlant(updatedPlant); // Update the plant in the context
+    editPlant(updatedPlant); // Update plant in context
   };
 
   return (
     <View style={styles.container}>
-      {/* Plant Name */}
+      <Image source={require("@/assets/images/icon.png")} style={styles.icon} />
+
       <Text style={styles.title}>{plant.name}</Text>
 
-      {/* Description */}
       <Text style={styles.details}>{plant.description}</Text>
 
-      {/* Watering Information */}
-      <Text style={styles.infoText}>
-        Last Watered: {new Date(plant.lastWatered).toDateString()}
-      </Text>
-      <Text style={styles.infoText}>
-        Next Watering:{" "}
-        {getNextWateringDate(plant.lastWatered, plant.wateringFrequency || 7)}{" "}
-        {/* Default frequency to 7 days */}
-      </Text>
+      <View style={styles.waterInfoContainer}>
+        <FontAwesome name="tint" size={22} color="#8C9B7A" />
+        <Text style={styles.infoText}>
+          Last Watered: {new Date(plant.lastWatered).toDateString()}
+        </Text>
+      </View>
 
-      {/* Mark as Watered Button */}
-      <Button
-        title="Mark as Watered"
-        color="#4682b4"
-        onPress={handleWaterPlant}
-      />
+      <View style={styles.waterInfoContainer}>
+        <FontAwesome name="calendar" size={22} color="#8C9B7A" />
+        <Text style={styles.infoText}>
+          Next Watering:{" "}
+          {getNextWateringDate(plant.lastWatered, plant.wateringFrequency || 7)}
+        </Text>
+      </View>
 
-      {/* Edit and Delete Buttons */}
+      <TouchableOpacity style={styles.waterButton} onPress={handleWaterPlant}>
+        <FontAwesome name="tint" size={24} color="#fff" />
+        <Text style={styles.waterButtonText}>Mark as Watered</Text>
+      </TouchableOpacity>
+
       <View style={styles.buttonContainer}>
-        <Button
-          title="Edit Plant"
-          color="orange"
+        <TouchableOpacity
+          style={styles.editButton}
           onPress={() =>
             router.push({
-              pathname: "/EditPlantScreen", // Correct route for Edit Plant screen
+              pathname: "/EditPlantScreen",
               params: { id: plant.id },
             })
           }
-        />
-        <Button
-          title="Delete Plant"
-          color="red"
+        >
+          <FontAwesome name="edit" size={20} color="#fff" />
+          <Text style={styles.actionButtonText}>Edit</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.deleteButton}
           onPress={() => {
             deletePlant(plant.id);
-            router.replace("/PlantListScreen"); // Go back to the Plant List Screen
+            router.replace("/PlantListScreen");
           }}
-        />
+        >
+          <FontAwesome name="trash" size={20} color="#fff" />
+          <Text style={styles.actionButtonText}>Delete</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Back Button */}
-      <Button title="Go Back" color="#2e8b57" onPress={() => router.back()} />
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <FontAwesome name="arrow-left" size={24} color="#fff" />
+        <Text style={styles.backButtonText}>Go Back</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -87,36 +94,107 @@ export default function PlantDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f5fffa",
     padding: 20,
+    backgroundColor: "#f5fffa",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  icon: {
+    width: 80,
+    height: 80,
+    marginBottom: 15,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#2e8b57",
+    fontSize: 34,
+    fontWeight: "600",
+    color: "#85A98F",
+    marginBottom: 15,
+    textAlign: "center",
+    lineHeight: 40,
   },
   details: {
     fontSize: 18,
-    color: "#555",
+    color: "#7D8B8C",
     marginBottom: 20,
     textAlign: "center",
+    paddingHorizontal: 20,
+    lineHeight: 24,
+  },
+  waterInfoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
   infoText: {
     fontSize: 16,
-    color: "#6b8e23",
-    marginBottom: 10,
+    color: "#8C9B7A",
+    marginLeft: 8,
+  },
+  waterButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#85A98F",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginBottom: 20,
+    width: "80%",
+  },
+  waterButtonText: {
+    fontSize: 18,
+    color: "#fff",
+    marginLeft: 8,
+  },
+  editButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#A3B88C", // Softer green for edit
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginHorizontal: 10,
+    width: "40%",
+    justifyContent: "center",
+  },
+  deleteButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F5B7B1", // Soft red for delete
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginHorizontal: 10,
+    width: "40%",
+    justifyContent: "center",
+  },
+  actionButtonText: {
+    fontSize: 16,
+    color: "#fff",
+    marginLeft: 8,
+    lineHeight: 20,
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#2e8b57", // Green for back action
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  backButtonText: {
+    fontSize: 18,
+    color: "#fff",
+    marginLeft: 8,
   },
   errorText: {
-    fontSize: 18,
+    fontSize: 20,
     color: "red",
+    textAlign: "center",
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: "80%",
-    marginVertical: 20,
+    justifyContent: "center",
+    width: "100%",
   },
 });
