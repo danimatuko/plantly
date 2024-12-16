@@ -3,6 +3,7 @@ import { PlantProvider } from "../context/PlantContext";
 import { Stack } from "expo-router";
 import * as Notifications from "expo-notifications";
 import React, { useEffect } from "react";
+import useRTL from "@/hooks/useRTL";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -17,18 +18,21 @@ export default function RootLayout() {
     requestPermissions();
   }, []);
 
+  const { isRTL } = useRTL();
+
   return (
     <PlantProvider>
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: "#f5fffa" },
           headerShown: false,
+          headerTitleAlign: isRTL ? "right" : "left",
         }}
       >
         <Stack.Screen name="(tabs)" />
         <Stack.Screen
-          name="PlantDetailsScreen/[id]" // Using a dynamic route for the plant ID
-          options={{ title: "Plant Details", headerShown: true }} // Customize the header if needed
+          name="PlantDetailsScreen/[id]"
+          options={{ title: "Plant Details", headerShown: true }}
         />
       </Stack>
     </PlantProvider>
