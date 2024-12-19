@@ -1,4 +1,3 @@
-// app/_layout.tsx
 import { PlantProvider } from "../context/PlantContext";
 import { Stack } from "expo-router";
 import * as Notifications from "expo-notifications";
